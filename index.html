@@ -5,18 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>GMiner ASIC</title>
   <meta name="description" content="Официальное руководство по прошивке GMiner ASIC для Bitmain Antminer. Установка, настройка, тюнинг, охлаждение и поддержка." />
-  
-  <!-- Favicon и PWA -->
+  <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="favicon.ico" title="GMiner ASIC">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" title="GMiner ASIC">
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" title="GMiner ASIC">
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" title="GMiner ASIC">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#00f0b5">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-  <!-- Google Analytics (замени G-XXXXXXX на свой ID) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <!-- Google Analytics (опционально) -->
+  <!--
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -24,7 +19,7 @@
     gtag('js', new Date());
     gtag('config', 'G-XXXXXXX');
   </script>
-
+  -->
   <style>
     :root {
       --bg: #0f0f15;
@@ -52,24 +47,24 @@
       color: var(--text);
       font-family: 'Segoe UI', system-ui, sans-serif;
       line-height: 1.6;
-      transition: all 0.3s ease;
+      transition: background 0.3s, color 0.3s;
     }
     header {
       text-align: center;
-      padding: 3rem 1rem;
+      padding: 2.5rem 1rem;
       background: linear-gradient(135deg, #0a0a12, #121220);
     }
     [data-theme="light"] header {
       background: linear-gradient(135deg, #f8f9fa, #e9ecef);
     }
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
+      font-size: 2.3rem;
+      margin-bottom: 0.8rem;
       color: var(--accent);
     }
     .subtitle {
-      font-size: 1.2rem;
-      opacity: 0.8;
+      font-size: 1.1rem;
+      opacity: 0.85;
       max-width: 700px;
       margin: 0 auto;
     }
@@ -77,28 +72,32 @@
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 1rem;
-      margin: 1rem 0;
+      gap: 0.9rem;
+      margin: 1.2rem 0;
     }
     .btn {
       display: inline-block;
-      padding: 0.8rem 1.5rem;
+      padding: 0.75rem 1.4rem;
       background: var(--card-bg);
       color: var(--link);
       text-decoration: none;
       border-radius: 8px;
       border: 1px solid var(--border);
-      transition: all 0.3s ease;
+      transition: all 0.25s ease;
       cursor: pointer;
+      font-weight: 500;
     }
     .btn:hover {
       background: #222;
       transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,240,181,0.3);
+      box-shadow: 0 4px 10px rgba(0, 240, 181, 0.25);
+    }
+    [data-theme="light"] .btn {
+      background: var(--card-bg);
     }
     [data-theme="light"] .btn:hover {
       background: #e9ecef;
-      box-shadow: 0 4px 8px rgba(0,160,133,0.3);
+      box-shadow: 0 4px 10px rgba(0, 160, 133, 0.25);
     }
     .container {
       max-width: 1000px;
@@ -106,8 +105,8 @@
       padding: 0 1.5rem;
     }
     section {
-      margin-bottom: 2.5rem;
-      padding: 1.5rem;
+      margin-bottom: 2.2rem;
+      padding: 1.4rem;
       background: var(--card-bg);
       border-radius: 12px;
       border: 1px solid var(--border);
@@ -115,22 +114,20 @@
     h2 {
       margin-bottom: 1rem;
       color: var(--accent);
-      cursor: pointer;
-    }
-    h2:hover {
-      text-decoration: underline;
+      font-size: 1.5rem;
     }
     ul, ol {
-      padding-left: 1.5rem;
+      padding-left: 1.6rem;
       margin: 1rem 0;
     }
     a {
       color: var(--link);
+      text-decoration: none;
     }
     a:hover {
       text-decoration: underline;
     }
-    /* Таблица - компактная */
+    /* Таблица */
     .table-container {
       overflow-x: auto;
       margin: 1rem 0;
@@ -140,117 +137,86 @@
       border-collapse: collapse;
       background: var(--card-bg);
       border: 1px solid var(--border);
-      font-size: 0.85rem;
+      font-size: 0.84rem;
     }
     th, td {
-      padding: 0.5rem 0.4rem;
+      padding: 0.55rem 0.45rem;
       text-align: left;
       border: 1px solid var(--border);
       white-space: nowrap;
-      max-width: 150px;
+      max-width: 140px;
       overflow: hidden;
       text-overflow: ellipsis;
     }
     th {
       background: #222;
-      font-weight: bold;
+      font-weight: 600;
       cursor: pointer;
       position: sticky;
       top: 0;
     }
     [data-theme="light"] th {
-      background: #dee2e6;
+      background: #e9ecef;
+      color: #212529;
     }
     tr:nth-child(even) {
       background: #1e1e2a;
     }
     [data-theme="light"] tr:nth-child(even) {
-      background: #f8f9fa;
+      background: #f1f3f5;
     }
     /* Поиск */
     #search-input {
       width: 100%;
       max-width: 400px;
-      padding: 0.5rem;
+      padding: 0.6rem;
       margin: 1rem auto;
       display: block;
-      border-radius: 4px;
+      border-radius: 6px;
       border: 1px solid var(--border);
       background: var(--card-bg);
       color: var(--text);
+      font-size: 1rem;
     }
     #search-results p {
       background: #1e1e2a;
-      padding: 0.5rem;
-      margin: 0.5rem 0;
-      border-radius: 4px;
+      padding: 0.6rem;
+      margin: 0.6rem 0;
+      border-radius: 6px;
+      font-size: 0.95rem;
     }
     [data-theme="light"] #search-results p {
-      background: #f8f9fa;
-    }
-    /* Калькулятор */
-    #power-input, button[onclick="calcCooling()"] {
-      padding: 0.5rem;
-      margin-right: 0.5rem;
-      border-radius: 4px;
-      border: 1px solid var(--border);
-    }
-    button[onclick="calcCooling()"] {
-      background: var(--accent);
-      color: var(--bg);
-      border: none;
-      cursor: pointer;
-    }
-    #cooling-result {
-      margin-top: 1rem;
-      font-weight: bold;
-      color: var(--accent);
+      background: #f1f3f5;
+      color: #212529;
     }
     /* Фильтр таблицы */
     #table-filter {
       width: 100%;
-      padding: 0.5rem;
+      padding: 0.6rem;
       margin-bottom: 1rem;
-      border-radius: 4px;
+      border-radius: 6px;
       border: 1px solid var(--border);
       background: var(--card-bg);
       color: var(--text);
-    }
-    /* Кнопка наверх */
-    #scroll-top {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: var(--accent);
-      color: var(--bg);
-      border: none;
-      padding: 10px 12px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: none;
-      font-size: 18px;
-      z-index: 1000;
-      transition: all 0.3s;
-    }
-    #scroll-top:hover {
-      transform: scale(1.1);
+      font-size: 0.95rem;
     }
     /* Тема */
     #theme-toggle {
       float: right;
-      padding: 0.5rem;
+      padding: 0.5rem 0.8rem;
       background: var(--card-bg);
       color: var(--text);
       border: 1px solid var(--border);
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
+      font-size: 0.95rem;
     }
     /* Адаптив */
     @media (max-width: 768px) {
-      h1 { font-size: 2rem; }
+      h1 { font-size: 1.9rem; }
       .btn-group { flex-direction: column; align-items: center; }
-      table { font-size: 0.75rem; }
-      th, td { padding: 0.3rem 0.2rem; }
+      table { font-size: 0.78rem; }
+      th, td { padding: 0.4rem 0.3rem; }
     }
   </style>
 </head>
@@ -259,8 +225,169 @@
     <h1>GMiner ASIC</h1>
     <p class="subtitle">Прошивка нового поколения для Bitmain Antminer. Максимум хешрейта, минимум энергопотребления.</p>
     <button id="theme-toggle">☀️ Светлый</button>
-    <input type="text" id="search-input" placeholder="🔍 Поиск по руководству (напр., 'пул' или 'охлаждение')...">
+    <input type="text" id="search-input" placeholder="🔍 Поиск по руководству (напр., 'пул', 'охлаждение', 'toolkit')">
     <div id="search-results"></div>
     <div class="btn-group">
-      <a href="https://github.com/develsoftware/GMinerAsicRelease" class="btn" target="_blank" rel="noopener noreferrer">📂 GitHub (релиз и исходники)</a>
-      <a href="https://t
+      <a href="https://github.com/develsoftware/GMinerAsicRelease" class="btn" target="_blank" rel="noopener noreferrer">📂 GitHub (релиз)</a>
+      <a href="https://t.me/gminer_asic" class="btn" target="_blank" rel="noopener noreferrer">💬 Telegram</a>
+      <a href="manual_ru.pdf" class="btn" download>📘 Скачать PDF</a>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Поддерживаемые устройства -->
+    <section>
+      <h2>✅ Поддерживаемые устройства</h2>
+      <p>Полный список из официального руководства (стр. 7). Всегда сверяйте модель на шильдике!</p>
+      <input id="table-filter" placeholder="Фильтр по модели (напр., S19, XP, T21...)">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th onclick="sortTable(0)">Модель ↑↓</th>
+              <th onclick="sortTable(1)">Хеш-плата ↑↓</th>
+              <th onclick="sortTable(2)">Чипы (кол-во/тип) ↑↓</th>
+              <th onclick="sortTable(3)">БП ↑↓</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>S19</td><td>BHB201/203/211/221/231/241</td><td>84/126 BM1362</td><td>APW12</td></tr>
+            <tr><td>S19 Pro</td><td>BHB261/2651/281/283/284</td><td>126 BM1362</td><td>APW12</td></tr>
+            <tr><td>S19j</td><td>BHB2701/265</td><td>108 BM1362</td><td>APW12</td></tr>
+            <tr><td>S19j Pro</td><td>BHB261/263/2621/272/263</td><td>126 BM1362</td><td>APW12</td></tr>
+            <tr><td>S19j Pro+</td><td>BHB2611/262</td><td>120 BM1362</td><td>APW12</td></tr>
+            <tr><td>S19 XP</td><td>BHB601/671/681/602/608</td><td>70/99/110 BM1366</td><td>APW12</td></tr>
+            <tr><td>S19 XP+</td><td>BHB604/607/684</td><td>110 BM1366</td><td>APW12</td></tr>
+            <tr><td>S19k Pro</td><td>BHB691/692/693</td><td>77 BM1366</td><td>APW12</td></tr>
+            <tr><td>S21</td><td>BHB681/683/686</td><td>108 BM1366</td><td>APW12</td></tr>
+            <tr><td>T21</td><td>BHB701/703/705</td><td>108 BM1368</td><td>APW12</td></tr>
+            <tr><td>S21 Pro</td><td>AHB701/BHB703</td><td>91 BM1370</td><td>APW12</td></tr>
+            <tr><td>S21+</td><td>AHB701</td><td>65 BM1370</td><td>APW12</td></tr>
+            <tr><td>S21+ (низк.)</td><td>AHB701</td><td>55 BM1370</td><td>APW12</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>⚠️ На Б/У ASIC модели часто не совпадают — проверяйте шильдик! 📖 <a href="manual_ru.pdf#page=7">PDF (стр. 7)</a></p>
+    </section>
+
+    <!-- Руководство -->
+    <section>
+      <h2>📚 Руководство пользователя</h2>
+      <ul>
+        <li><a href="manual_ru.pdf#page=3">1. Прошивка оборудования (Gminer Toolkit)</a></li>
+        <li><a href="manual_ru.pdf#page=7">2. Список поддерживаемых устройств</a></li>
+        <li><a href="manual_ru.pdf#page=8">3. Обновление прошивки</a></li>
+        <li><a href="manual_ru.pdf#page=10">4. Откат VNISH на BITMAIN</a></li>
+        <li><a href="manual_ru.pdf#page=11">5. Экран мониторинга (Обзор)</a></li>
+        <li><a href="manual_ru.pdf#page=15">6. Пулы</a></li>
+        <li><a href="manual_ru.pdf#page=17">7. Охлаждение</a></li>
+        <li><a href="manual_ru.pdf#page=19">8. Производительность (Тюнинг)</a></li>
+        <li><a href="manual_ru.pdf#page=24">9. Система</a></li>
+        <li><a href="manual_ru.pdf#page=26">10. Сеть</a></li>
+        <li><a href="manual_ru.pdf#page=28">11. Оформление</a></li>
+        <li><a href="manual_ru.pdf#page=29">12. Лог</a></li>
+      </ul>
+    </section>
+
+    <!-- FAQ -->
+    <section>
+      <h2>❓ Частые вопросы</h2>
+      <ul>
+        <li><a href="manual_ru.pdf#page=10">Как откатить с VNISH?</a></li>
+        <li><a href="manual_ru.pdf#page=3">Почему Toolkit не видит устройство?</a></li>
+        <li><a href="manual_ru.pdf#page=17">Как настроить охлаждение?</a></li>
+        <li><a href="manual_ru.pdf#page=19">Что делать с медленными чипами?</a></li>
+      </ul>
+      <p>Поддержка: <a href="https://t.me/gminer_asic">Telegram-канал</a>. ⚠️ Не отправляйте логины/пароли пулов!</p>
+    </section>
+  </div>
+
+  <script>
+    // === ТЕМА ===
+    const toggle = document.getElementById('theme-toggle');
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    toggle.textContent = savedTheme === 'dark' ? '☀️ Светлый' : '🌙 Тёмный';
+
+    toggle.onclick = () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      const newTheme = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      toggle.textContent = newTheme === 'dark' ? '☀️ Светлый' : '🌙 Тёмный';
+    };
+
+    // === ПОИСК (НА РУССКОМ) ===
+    const searchIndex = [
+      { title: "Прошивка оборудования", keywords: "toolkit прошивка gminer установка vnish bitmain откат", page: 3 },
+      { title: "Поддерживаемые устройства", keywords: "модель хешплата чипы bm1362 bm1366 bm1368 bm1370 s19 s21 t21", page: 7 },
+      { title: "Обновление прошивки", keywords: "обновить прошивка версия релиз github", page: 8 },
+      { title: "Откат VNISH на BITMAIN", keywords: "vnish откат bitmain стоковая прошивка", page: 10 },
+      { title: "Экран мониторинга", keywords: "мониторинг хешрейт температура дашборд", page: 11 },
+      { title: "Пулы", keywords: "пул адрес логин пароль viabtc f2pool stratum", page: 15 },
+      { title: "Охлаждение", keywords: "охлаждение кулеры иммерсия температура watchdog", page: 17 },
+      { title: "Производительность (Тюнинг)", keywords: "тюнинг частота напряжение автотюнинг чипы", page: 19 },
+      { title: "Система", keywords: "система сброс настройки бэкап восстановление", page: 24 },
+      { title: "Сеть", keywords: "сеть dhcp статический ip адрес", page: 26 },
+      { title: "Оформление", keywords: "оформление тема язык интерфейс", page: 28 },
+      { title: "Лог", keywords: "лог ошибки staled share bad chips диагностика", page: 29 }
+    ];
+
+    document.getElementById('search-input').addEventListener('input', function() {
+      const query = this.value.trim().toLowerCase();
+      const resultsDiv = document.getElementById('search-results');
+      if (query.length < 2) {
+        resultsDiv.innerHTML = '';
+        return;
+      }
+
+      const matches = searchIndex.filter(item =>
+        item.title.toLowerCase().includes(query) ||
+        item.keywords.includes(query)
+      );
+
+      if (matches.length === 0) {
+        resultsDiv.innerHTML = '<p>Ничего не найдено. Попробуйте: "пул", "охлаждение", "toolkit", "vnish"</p>';
+      } else {
+        resultsDiv.innerHTML = matches.map(item =>
+          `<p><strong>${item.title}</strong> — <a href="manual_ru.pdf#page=${item.page}" target="_blank">стр. ${item.page}</a></p>`
+        ).join('');
+      }
+    });
+
+    // === ТАБЛИЦА: СОРТИРОВКА ===
+    let sortDirections = {};
+    function sortTable(colIndex) {
+      const table = document.querySelector('table');
+      const tbody = table.tBodies[0];
+      const rows = Array.from(tbody.rows);
+      const direction = sortDirections[colIndex] = !sortDirections[colIndex];
+
+      rows.sort((a, b) => {
+        const aText = a.cells[colIndex].textContent.trim();
+        const bText = b.cells[colIndex].textContent.trim();
+
+        // Числовая сортировка для колонки "Чипы"
+        if (colIndex === 2) {
+          const aNum = parseInt(aText) || 0;
+          const bNum = parseInt(bText) || 0;
+          return (aNum - bNum) * (direction ? 1 : -1);
+        }
+
+        return aText.localeCompare(bText, 'ru') * (direction ? 1 : -1);
+      });
+
+      rows.forEach(row => tbody.appendChild(row));
+    }
+
+    // === ТАБЛИЦА: ФИЛЬТР ===
+    document.getElementById('table-filter').addEventListener('input', function() {
+      const filter = this.value.toLowerCase();
+      const rows = document.querySelectorAll('tbody tr');
+      rows.forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>
