@@ -25,7 +25,7 @@
     gtag('config', 'G-XXXXXXX');
   </script>
 
-  <!-- Поиск (Lunr.js) -->
+  <!-- Поиск (Lunr.js) — если не грузится, скачай lunr.min.js и замени src на "lunr.min.js" -->
   <script src="https://unpkg.com/lunr/lunr.min.js"></script>
 
   <style>
@@ -143,14 +143,14 @@
       border-collapse: collapse;
       background: var(--card-bg);
       border: 1px solid var(--border);
-      font-size: 0.85rem; /* Меньший шрифт для компактности */
+      font-size: 0.85rem;
     }
     th, td {
-      padding: 0.5rem 0.4rem; /* Уменьшенный padding */
+      padding: 0.5rem 0.4rem;
       text-align: left;
       border: 1px solid var(--border);
-      white-space: nowrap; /* Нет переносов в ячейках */
-      max-width: 150px; /* Ограничение ширины для компактности */
+      white-space: nowrap;
+      max-width: 150px;
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -420,45 +420,69 @@
   <button id="scroll-top" onclick="scrollToTop()">↑</button>
 
   <script>
-    // Тема (улучшенная светлая)
+    // Ждём загрузки DOM и Lunr
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof lunr === 'undefined') {
+        console.error('Lunr.js not loaded! Download lunr.min.js and host locally.');
+        document.getElementById('search-results').innerHTML = '<p style="color: red;">Ошибка: Библиотека поиска не загрузилась. Проверьте интернет или скачайте lunr.min.js.</p>';
+        return;
+      }
+
+      // Расширенный индекс (с ключевыми словами из PDF)
+      const docs = [
+        { id: 1, title: 'Прошивка оборудования', content: 'Gminer Toolkit скачивание GitHub Windows Linux WINE кастом VNISH MSK Luxor Hive откат Bitmain Bitmain 2024 откат 2020 2023 добавление группы IP диапазон пароль admin новая группа оборудование' },
+        { id: 2, title: 'Список поддерживаемых устройств', content: 'S19 S19 Pro S19j S19j Pro S19j Pro+ S19 XP S19 XP+ S19k Pro S21 T21 S21 Pro S21+ хеш платы BHB AHB чипы BM1362 BM1366 BM1368 BM1370 количество чипов 55 65 77 84 91 99 108 110 120 126 APW12 шильдик серийник Б/У ASIC' },
+        { id: 3, title: 'Обновление прошивки', content: 'Toolkit группа обновить файл прошивки авто обновление расписание логи System Log актуальная последняя троеточие' },
+        { id: 4, title: 'Откат VNISH на BITMAIN', content: 'Toolkit сканировать выбрать откат Bitmain FW подождать 5 10 мин перезагрузка ошибка сброс роутер IP' },
+        { id: 5, title: 'Экран мониторинга Обзор', content: 'Дашборд хешрейт температура энергопотребление графики 24ч неделя месяц алерты перегрев низкий хеш' },
+        { id: 6, title: 'Пулы', content: 'Добавить адрес логин пароль резервные пулы примеры ViaBTC stratum tcp btc viabtc com 3333 worker pass F2Pool stratum tcp btc f2pool com 3333 соединение интервал 5 секунд сбой переключится' },
+        { id: 7, title: 'Охлаждение', content: 'Режимы автоматический ручной иммерсионный устройство погруженное настройка кулеров 0 100 Watchdog авто выкл >85 C отключить кулеры' },
+        { id: 8, title: 'Производительность Тюнинг', content: 'Авто тюнинг запуск 24ч тест ручной частота напряжение по чипам медленные чипы -10 частоты мониторинг bad chips <5' },
+        { id: 9, title: 'Система', content: 'Сброс настроек бэкап восстановление версия FW ребут шатдаун обновление Toolkit' },
+        { id: 10, title: 'Сеть', content: 'DHCP статический IP порты 80 web 4028 API firewall разрешите трафик пулов' },
+        { id: 11, title: 'Оформление', content: 'Темы тёмная светлая язык RU EN кастом CSS продвинутые' },
+        { id: 12, title: 'Лог', content: 'Расшифровка Staled share задержка сети bad chips дефектные чипы экспорт TXT фильтр ошибок' }
+      ];
+      const idx = lunr(function () {
+        this.field('title');
+        this.field('content');
+        docs.forEach(d => this.add(d));
+      });
+      console.log('Search index built with', docs.length, 'docs');
+
+      const searchInput = document.getElementById('search-input');
+      const resultsDiv = document.getElementById('search-results');
+      searchInput.onkeyup = function() {
+        const query = this.value.trim();
+        console.log('Search query:', query); // Debug
+        if (query.length < 2) { 
+          resultsDiv.innerHTML = ''; 
+          return; 
+        }
+        const matches = idx.search(query);
+        console.log('Raw matches:', matches); // Debug
+        const docMatches = matches.map(r => docs.find(d => d.id == r.ref));
+        console.log('Doc matches:', docMatches.length); // Debug
+        if (docMatches.length === 0) {
+          resultsDiv.innerHTML = '<p>Ничего не найдено. Попробуйте другое слово (мин. 2 символа).</p>';
+        } else {
+          resultsDiv.innerHTML = docMatches.map(m => `<p><strong>${m.title}</strong>: ${m.content.slice(0,100)}... <a href="manual_ru.pdf#page=${m.id + 2}" target="_blank">Подробнее в PDF (стр. ${m.id + 2})</a></p>`).join('');
+        }
+      };
+    });
+
+    // Остальной JS (калькулятор, таблица, тема, наверх) — как раньше
+    // Тема
     const toggle = document.getElementById('theme-toggle');
-    const currentTheme = localStorage.getItem('theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', currentTheme);
-    toggle.textContent = currentTheme === 'dark' ? '☀️ Светлый' : '🌙 Тёмный';
     toggle.onclick = () => {
       const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem('theme', theme);
       toggle.textContent = theme === 'dark' ? '☀️ Светлый' : '🌙 Тёмный';
     };
-
-    // Поиск (расширенный индекс по руководству)
-    const docs = [
-      { id: 1, title: 'Прошивка оборудования', content: 'Gminer Toolkit, скачивание с GitHub, Windows Linux WINE, кастом VNISH MSK Luxor Hive откат на Bitmain, Bitmain 2024 откат на 2020 2023, добавление группы IP диапазон пароль admin' },
-      { id: 2, title: 'Список поддерживаемых устройств', content: 'S19 S19 Pro S19j S19j Pro S19j Pro+ S19 XP S19 XP+ S19k Pro S21 T21 S21 Pro S21+ хеш платы BHB AHB чипы BM1362 BM1366 BM1368 BM1370 количество чипов 55 65 77 84 91 99 108 110 120 126 APW12' },
-      { id: 3, title: 'Обновление прошивки', content: 'Через Toolkit группа обновить файл прошивки авто обновление по расписанию логи в System Log' },
-      { id: 4, title: 'Откат VNISH на BITMAIN', content: 'Toolkit сканировать выбрать откат Bitmain FW подождать 5 10 мин перезагрузка ошибка сброс роутер IP' },
-      { id: 5, title: 'Экран мониторинга Обзор', content: 'Дашборд хешрейт температура энергопотребление графики 24ч неделя месяц алерты перегрев низкий хеш' },
-      { id: 6, title: 'Пулы', content: 'Добавить адрес логин пароль резервные пулы примеры ViaBTC stratum tcp btc viabtc com 3333 worker pass F2Pool stratum tcp btc f2pool com 3333' },
-      { id: 7, title: 'Охлаждение', content: 'Режимы авто ручной иммерсия настройка кулеров 0 100 Watchdog авто выкл >85 C калькулятор ниже' },
-      { id: 8, title: 'Производительность Тюнинг', content: 'Авто тюнинг запуск 24ч тест ручной частота напряжение по чипам медленные чипы -10 частоты мониторинг bad chips <5' },
-      { id: 9, title: 'Система', content: 'Сброс настроек бэкап восстановление версия FW ребут шатдаун обновление Toolkit' },
-      { id: 10, title: 'Сеть', content: 'DHCP статический IP порты 80 web 4028 API firewall разрешите трафик пулов' },
-      { id: 11, title: 'Оформление', content: 'Темы тёмная светлая язык RU EN кастом CSS продвинутые' },
-      { id: 12, title: 'Лог', content: 'Расшифровка Staled share задержка сети bad chips дефектные чипы экспорт TXT фильтр ошибок' }
-    ];
-    const idx = lunr(function () {
-      this.field('title');
-      this.field('content');
-      docs.forEach(d => this.add(d));
-    });
-    document.getElementById('search-input').onkeyup = function() {
-      const query = this.value;
-      const results = document.getElementById('search-results');
-      if (query.length < 2) { results.innerHTML = ''; return; }
-      const matches = idx.search(query).map(r => docs.find(d => d.id == r.ref));
-      results.innerHTML = matches.map(m => `<p><strong>${m.title}</strong>: ${m.content.slice(0,100)}... <a href="manual_ru.pdf#page=${m.id + 2}">Подробнее в PDF</a></p>`).join(''); // +2 т.к. стр.1-2 введение/оглавление
-    };
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    toggle.textContent = currentTheme === 'dark' ? '☀️ Светлый' : '🌙 Тёмный';
 
     // Калькулятор
     function calcCooling() {
