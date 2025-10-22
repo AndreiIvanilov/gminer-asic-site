@@ -1,10 +1,33 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>GMiner ASIC</title>
   <meta name="description" content="Официальное руководство по прошивке GMiner ASIC для Bitmain Antminer. Установка, настройка, тюнинг, охлаждение и поддержка." />
+  
+  <!-- Favicon и PWA -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico" title="GMiner ASIC">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" title="GMiner ASIC">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" title="GMiner ASIC">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" title="GMiner ASIC">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00f0b5">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Google Analytics (замени G-XXXXXXX на свой ID) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXX');
+  </script>
+
+  <!-- Поиск (Lunr.js) -->
+  <script src="https://unpkg.com/lunr/lunr.min.js"></script>
+
   <style>
     :root {
       --bg: #0f0f15;
@@ -13,6 +36,14 @@
       --accent: #00f0b5;
       --link: #4deeea;
       --border: #2a2a3a;
+    }
+    [data-theme="light"] {
+      --bg: #f0f0f0;
+      --card-bg: #fff;
+      --text: #333;
+      --accent: #00a085;
+      --link: #007acc;
+      --border: #ddd;
     }
     * {
       margin: 0;
@@ -24,6 +55,7 @@
       color: var(--text);
       font-family: 'Segoe UI', system-ui, sans-serif;
       line-height: 1.6;
+      transition: all 0.3s ease;
     }
     header {
       text-align: center;
@@ -33,10 +65,11 @@
     h1 {
       font-size: 2.5rem;
       margin-bottom: 1rem;
-      background: linear-gradient(to right, var(--accent), var(--link));
+      background: linear-gradient(45deg, #00f0b5, #4deeea, #ff6b6b);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
+      text-shadow: 0 0 5px var(--accent), 0 0 10px var(--accent);
     }
     .subtitle {
       font-size: 1.2rem;
@@ -44,9 +77,15 @@
       max-width: 700px;
       margin: 0 auto;
     }
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
     .btn {
       display: inline-block;
-      margin: 0.5rem;
       padding: 0.8rem 1.5rem;
       background: var(--card-bg);
       color: var(--link);
@@ -54,10 +93,17 @@
       border-radius: 8px;
       border: 1px solid var(--border);
       transition: all 0.3s ease;
+      cursor: pointer;
     }
     .btn:hover {
       background: #222;
       transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,240,181,0.3);
+      animation: neonPulse 1s infinite;
+    }
+    @keyframes neonPulse {
+      0%,100%{ box-shadow: 0 0 5px var(--accent); }
+      50%{ box-shadow: 0 0 20px var(--accent); }
     }
     .container {
       max-width: 1000px;
@@ -74,6 +120,11 @@
     h2 {
       margin-bottom: 1rem;
       color: var(--accent);
+      background: linear-gradient(45deg, #00f0b5, #4deeea);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 5px var(--accent);
     }
     ul, ol {
       padding-left: 1.5rem;
@@ -82,84 +133,10 @@
     a {
       color: var(--link);
     }
-    footer {
-      text-align: center;
-      padding: 2rem;
-      opacity: 0.7;
-      font-size: 0.9rem;
+    a:hover {
+      text-decoration: underline;
     }
-    @media (max-width: 600px) {
-      .btn {
-        display: block;
-        margin: 0.6rem auto;
-        width: 90%;
-      }
-    }
-  </style>
-    <!-- Favicon -->
-<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
-<link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
-<link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
-<link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
-<link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
-<link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
-<link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
-<link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/manifest.json">
-<meta name="msapplication-TileColor" content="#ffffff">
-<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
-<meta name="theme-color" content="#ffffff">
-</head>
-<body>
-
-<header>
-  <h1>GMiner ASIC</h1>
-  <p class="subtitle">Прошивка нового поколения для Bitmain Antminer — максимум хешрейта, минимум энергопотребления</p>
-  <a href="https://github.com/develsoftware/GMinerAsicRelease/releases" class="btn">📥 Скачать прошивку</a>
-  <a href="manual_ru.pdf" class="btn">📘 Руководство (PDF)</a>
-  <a href="https://t.me/gminer_asic" class="btn">💬 Поддержка в Telegram</a>
-  <a href="https://github.com/develsoftware/GMinerAsicRelease" class="btn">📂 GitHub</a>
-</header>
-
-<div class="container">
-
-  <section>
-    <h2>🚀 Быстрый старт</h2>
-    <ol>
-      <li>Убедитесь, что на ASIC установлена <strong>стоковая прошивка Bitmain</strong> (если использовали VNISH, Luxor и др. — сначала сделайте откат)</li>
-      <li>Скачайте <a href="https://github.com/develsoftware/GMinerAsicRelease/releases">GMiner Toolkit</a></li>
-      <li>Добавьте ваш ASIC в Toolkit, введите IP и пароль (<code>admin</code> по умолчанию)</li>
-      <li>Нажмите «Установить прошивку»</li>
-      <li>После перезагрузки настройте пул и профиль через веб-интерфейс</li>
-    </ol>
-  </section>
-
-  <section>
-    <h2>📚 Руководство пользователя</h2>
-    <p>Полное руководство доступно в формате PDF:</p>
-    <a href="manual_ru.pdf" class="btn">Скачать PDF-руководство</a>
-    <p>Основные разделы:</p>
-    <ul>
-      <li>Прошивка оборудования (GMiner Toolkit)</li>
-      <li>Обновление и откат прошивки</li>
-      <li>Настройка пулов (до 3 адресов)</li>
-      <li>Режимы охлаждения: автоматический, ручной, иммерсионный</li>
-      <li>Тюнинг: авто и ручной режимы, настройка чипов</li>
-      <li>Система: сон, задержка запуска, резервная копия</li>
-      <li>Анализ логов и диагностика ошибок</li>
-    </ul>
-  </section>
-
-<section>
-  <h2>✅ Поддерживаемые устройства</h2>
-  <p>На текущий момент поддерживаются следующие модели с хеш-платами:</p>
-
-  <style>
+    /* Таблица */
     .table-container {
       overflow-x: auto;
       margin: 1rem 0;
@@ -179,95 +156,364 @@
     th {
       background: #222;
       font-weight: bold;
+      cursor: pointer;
     }
     tr:nth-child(even) {
       background: #1e1e2a;
     }
+    /* Аккордеоны */
+    details {
+      margin-bottom: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+    summary {
+      padding: 0.5rem;
+      background: var(--card-bg);
+      color: var(--accent);
+      font-weight: bold;
+      cursor: pointer;
+    }
+    details[open] summary ~ * {
+      animation: slideDown 0.3s ease-out;
+      padding: 1rem;
+      background: #1e1e2a;
+      margin-top: 0.5rem;
+      border-radius: 0 0 4px 4px;
+    }
+    @keyframes slideDown {
+      from { opacity: 0; max-height: 0; }
+      to { opacity: 1; max-height: 200px; }
+    }
+    /* Поиск */
+    #search-input {
+      width: 100%;
+      max-width: 400px;
+      padding: 0.5rem;
+      margin: 1rem auto;
+      display: block;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+    }
+    #search-results p {
+      background: #1e1e2a;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      border-radius: 4px;
+    }
+    /* Калькулятор */
+    #power-input, button[onclick="calcCooling()"] {
+      padding: 0.5rem;
+      margin-right: 0.5rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    button[onclick="calcCooling()"] {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      cursor: pointer;
+    }
+    #cooling-result {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: var(--accent);
+    }
+    /* Фильтр таблицы */
+    #table-filter {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+    }
+    /* Кнопка наверх */
+    #scroll-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      padding: 10px 12px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      font-size: 18px;
+      z-index: 1000;
+      transition: all 0.3s;
+    }
+    #scroll-top:hover {
+      transform: scale(1.1);
+    }
+    /* Тема */
+    #theme-toggle {
+      float: right;
+      padding: 0.5rem;
+      background: var(--card-bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    /* Адаптив */
+    @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+      .btn-group { flex-direction: column; align-items: center; }
+    }
   </style>
+</head>
+<body>
+  <header>
+    <h1>GMiner ASIC</h1>
+    <p class="subtitle">Прошивка нового поколения для Bitmain Antminer. Максимум хешрейта, минимум энергопотребления.</p>
+    <button id="theme-toggle">☀️ Светлый</button>
+    <input type="text" id="search-input" placeholder="🔍 Поиск по руководству (напр., 'пул' или 'охлаждение')...">
+    <div id="search-results"></div>
+    <div class="btn-group">
+      <a href="https://github.com/develsoftware/GMinerAsicRelease" class="btn" target="_blank" rel="noopener noreferrer">📂 GitHub (релиз и исходники)</a>
+      <a href="https://t.me/gminer_asic" class="btn" target="_blank" rel="noopener noreferrer">💬 Telegram-канал поддержки</a>
+      <a href="manual_ru.pdf" class="btn" download>📘 Скачать PDF-руководство</a>
+    </div>
+  </header>
 
-  <div class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th>Модель устройства</th>
-          <th>Хеш-плата</th>
-          <th>Количество чипов</th>
-          <th>Модель БП</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>A3HBxxxx (Antminer S19j Pro и др.)</td>
-          <td>A3HBxxxx</td>
-          <td>160</td>
-          <td>APW12</td>
-        </tr>
-        <tr>
-          <td>BHBxxxx (Antminer S19 XP и др.)</td>
-          <td>BHBxxxx</td>
-          <td>176</td>
-          <td>APW12</td>
-        </tr>
-        <tr>
-          <td>A3HExxxx (Antminer S19j Pro+ и др.)</td>
-          <td>A3HExxxx</td>
-          <td>160</td>
-          <td>APW12</td>
-        </tr>
-        <tr>
-          <td>BHExxxx (Antminer S19 XP+ и др.)</td>
-          <td>BHExxxx</td>
-          <td>176</td>
-          <td>APW12</td>
-        </tr>
-        <tr>
-          <td>A3HCxxxx (Antminer S19 Pro и др.)</td>
-          <td>A3HCxxxx</td>
-          <td>144</td>
-          <td>APW12</td>
-        </tr>
-        <tr>
-          <td>BHCxxxx (Antminer S19 Pro+ и др.)</td>
-          <td>BHCxxxx</td>
-          <td>144</td>
-          <td>APW12</td>
-        </tr>
-        <tr>
-          <td>A3HAxxxx (Antminer S19 и др.)</td>
-          <td>A3HAxxxx</td>
-          <td>128</td>
-          <td>APW12</td>
-        </tr>
-        <tr>
-          <td>BHAxxxx (Antminer S19+ и др.)</td>
-          <td>BHAxxxx</td>
-          <td>128</td>
-          <td>APW12</td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="container">
+    <!-- Поддерживаемые устройства с фильтром и сортировкой -->
+    <section>
+      <h2>✅ Поддерживаемые устройства</h2>
+      <p>На текущий момент поддерживаются следующие модели с хеш-платами:</p>
+      <input id="table-filter" placeholder="Фильтр по модели (напр., S19)...">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th onclick="sortTable(0)">Модель устройства ↑↓</th>
+              <th onclick="sortTable(1)">Хеш-плата ↑↓</th>
+              <th onclick="sortTable(2)">Количество чипов ↑↓</th>
+              <th onclick="sortTable(3)">Модель БП ↑↓</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>A3HBxxxx (Antminer S19j Pro и др.)</td>
+              <td>A3HBxxxx</td>
+              <td>160</td>
+              <td>APW12</td>
+            </tr>
+            <tr>
+              <td>BHBxxxx (Antminer S19 XP и др.)</td>
+              <td>BHBxxxx</td>
+              <td>176</td>
+              <td>APW12</td>
+            </tr>
+            <tr>
+              <td>A3HExxxx (Antminer S19j Pro+ и др.)</td>
+              <td>A3HExxxx</td>
+              <td>160</td>
+              <td>APW12</td>
+            </tr>
+            <tr>
+              <td>BHExxxx (Antminer S19 XP+ и др.)</td>
+              <td>BHExxxx</td>
+              <td>176</td>
+              <td>APW12</td>
+            </tr>
+            <tr>
+              <td>A3HCxxxx (Antminer S19 Pro и др.)</td>
+              <td>A3HCxxxx</td>
+              <td>144</td>
+              <td>APW12</td>
+            </tr>
+            <tr>
+              <td>BHCxxxx (Antminer S19 Pro+ и др.)</td>
+              <td>BHCxxxx</td>
+              <td>144</td>
+              <td>APW12</td>
+            </tr>
+            <tr>
+              <td>A3HAxxxx (Antminer S19 и др.)</td>
+              <td>A3HAxxxx</td>
+              <td>128</td>
+              <td>APW12</td>
+            </tr>
+            <tr>
+              <td>BHAxxxx (Antminer S19+ и др.)</td>
+              <td>BHAxxxx</td>
+              <td>128</td>
+              <td>APW12</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>⚠️ Всегда сверяйте модель на шильдике устройства с данными в интерфейсе!</p>
+      <p>📖 Полный список и подробности: <a href="manual_ru.pdf">официальное руководство</a>. Sitemap: <a href="sitemap.xml">sitemap.xml</a>.</p>
+    </section>
+
+    <!-- Руководство с аккордеонами -->
+    <section>
+      <h2>📚 Руководство пользователя</h2>
+      <details>
+        <summary>1. Установка прошивки</summary>
+        <div>
+          <p>Поддерживаемые устройства: Antminer S19j Pro и др.</p>
+          <ul>
+            <li>Подготовка: Откат с VNISH/MSK/Luxor → Bitmain.</li>
+            <li>Используйте GMiner Toolkit (Windows/Linux).</li>
+            <li>Скриншоты: <img src="screenshot-install.png" alt="Скриншот установки прошивки" width="300"> (добавь свой файл).</li>
+          </ul>
+        </div>
+      </details>
+      <details>
+        <summary>2. Настройка пулов</summary>
+        <div>
+          <p>Как добавить пул: адрес, логин, пароль.</p>
+          <ul>
+            <li>Примеры: ViaBTC, F2Pool.</li>
+            <li>Резервные пулы для стабильности.</li>
+          </ul>
+        </div>
+      </details>
+      <details>
+        <summary>3. Охлаждение и температурный контроль</summary>
+        <div>
+          <p>Режимы: автоматический / ручной / иммерсионный.</p>
+          <ul>
+            <li>Настройка кулеров и Watchdog.</li>
+            <li>Защита от перегрева.</li>
+          </ul>
+        </div>
+      </details>
+      <details>
+        <summary>4. Тюнинг и производительность</summary>
+        <div>
+          <p>Автотюнинг vs ручной режим.</p>
+          <ul>
+            <li>Настройка частот, напряжения.</li>
+            <li>Работа с медленными чипами.</li>
+          </ul>
+        </div>
+      </details>
+      <details>
+        <summary>5. Система и сеть</summary>
+        <div>
+          <p>Сброс настроек, резервное копирование.</p>
+          <ul>
+            <li>DHCP vs статический IP.</li>
+          </ul>
+        </div>
+      </details>
+      <details>
+        <summary>6. Логи и диагностика</summary>
+        <div>
+          <p>Как читать логи, расшифровка ошибок (Staled share, bad chips).</p>
+        </div>
+      </details>
+      <p><a href="manual_ru.pdf">Полное руководство в PDF</a> для деталей.</p>
+    </section>
+
+    <!-- Калькулятор -->
+    <section>
+      <h2>🧊 Калькулятор охлаждения</h2>
+      <p>Введи мощность майнера (Вт) для рекомендаций.</p>
+      <input type="number" id="power-input" placeholder="Напр., 3250" min="0" max="5000">
+      <button onclick="calcCooling()">Рассчитать</button>
+      <p id="cooling-result"></p>
+    </section>
+
+    <!-- FAQ -->
+    <section>
+      <h2>❓ Частые вопросы</h2>
+      <details>
+        <summary>Как откатить с другой прошивки?</summary>
+        <div>Используйте Toolkit — шаг 1 в руководстве.</div>
+      </details>
+      <p>Поддержка: <a href="https://t.me/gminer_asic">Telegram</a>. ⚠️ Не отправляйте приватные ключи!</p>
+    </section>
   </div>
 
-  <p>⚠️ Всегда сверяйте модель на шильдике устройства с данными в интерфейсе! Часто бывает, что модели устройств, серийные номера не соответствуют при покупке Б/У ASIC.</p>
-  <p>📖 Полный список и подробности смотрите в <a href="manual_ru.pdf">официальном руководстве</a>.</p>
-</section>
+  <!-- Кнопка наверх -->
+  <button id="scroll-top" onclick="scrollToTop()">↑</button>
 
-  <section>
-    <h2>🛠️ Полезные ссылки</h2>
-    <ul>
-      <li><a href="https://github.com/develsoftware/GMinerAsicRelease/releases">Официальные релизы</a></li>
-      <li><a href="https://t.me/gminer_asic">Телеграм-канал поддержки</a></li>
-      <li><a href="manual_ru.pdf">Руководство пользователя (PDF)</a></li>
-      <li><a href="https://github.com/develsoftware/GMinerAsicRelease">Исходный код на GitHub</a></li>
-    </ul>
-  </section>
+  <script>
+    // Тема
+    const toggle = document.getElementById('theme-toggle');
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    toggle.textContent = currentTheme === 'dark' ? '☀️ Светлый' : '🌙 Тёмный';
+    toggle.onclick = () => {
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      toggle.textContent = theme === 'dark' ? '☀️ Светлый' : '🌙 Тёмный';
+    };
 
-</div>
+    // Поиск
+    const docs = [
+      { id: 1, title: 'Установка', content: 'Откат с VNISH, Bitmain, Toolkit' },
+      { id: 2, title: 'Пулы', content: 'Адрес, логин, ViaBTC, F2Pool' },
+      { id: 3, title: 'Охлаждение', content: 'Авто, ручной, иммерсия, кулеры' },
+      { id: 4, title: 'Тюнинг', content: 'Частоты, напряжение, чипы' },
+      { id: 5, title: 'Сеть', content: 'Сброс, DHCP, IP' },
+      { id: 6, title: 'Логи', content: 'Ошибки, Staled share' }
+    ];
+    const idx = lunr(function () {
+      this.field('title');
+      this.field('content');
+      docs.forEach(d => this.add(d));
+    });
+    document.getElementById('search-input').onkeyup = function() {
+      const query = this.value;
+      const results = document.getElementById('search-results');
+      if (query.length < 2) { results.innerHTML = ''; return; }
+      const matches = idx.search(query).map(r => docs.find(d => d.id == r.ref));
+      results.innerHTML = matches.map(m => `<p><strong>${m.title}</strong>: ${m.content.slice(0,100)}...</p>`).join('');
+    };
 
-<footer>
-  © 2025 GMiner ASIC. Все права защищены. <br>
-  Не является официальным продуктом Bitmain.
-</footer>
+    // Калькулятор
+    function calcCooling() {
+      const power = parseInt(document.getElementById('power-input').value) || 0;
+      let advice = '';
+      if (power > 3500) advice = '⚠️ Иммерсионное охлаждение обязательно! Риск перегрева.';
+      else if (power > 2500) advice = '🔧 Ручной режим кулеров + мониторинг 24/7.';
+      else advice = '✅ Авторежим + базовая вентиляция хватит.';
+      document.getElementById('cooling-result').innerHTML = `Для ${power} Вт: ${advice}`;
+    }
 
+    // Таблица: Сортировка
+    let sortDir = {};
+    function sortTable(col) {
+      const table = document.querySelector('table');
+      const tbody = table.tBodies[0];
+      const rows = Array.from(tbody.rows);
+      const dir = sortDir[col] = !sortDir[col];
+      rows.sort((a, b) => {
+        let valA = a.cells[col].textContent.trim();
+        let valB = b.cells[col].textContent.trim();
+        if (!isNaN(valA) && !isNaN(valB)) { valA = parseInt(valA); valB = parseInt(valB); }
+        return (valA > valB ? 1 : -1) * (dir ? 1 : -1);
+      });
+      rows.forEach(row => tbody.appendChild(row));
+    }
+    // Фильтр
+    function filterTable() {
+      const input = document.getElementById('table-filter').value.toLowerCase();
+      const rows = document.querySelectorAll('tbody tr');
+      rows.forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(input) ? '' : 'none';
+      });
+    }
+
+    // Наверх
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    window.onscroll = function() {
+      document.getElementById('scroll-top').style.display = (window.scrollY > 300) ? 'block' : 'none';
+    };
+  </script>
 </body>
 </html>
