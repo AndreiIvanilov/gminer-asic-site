@@ -141,76 +141,93 @@
   <h2>✅ Поддерживаемые устройства</h2>
   <p>На текущий момент поддерживаются следующие модели с хеш-платами:</p>
 
-  <div style="background: #1a1a25; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem;">
-    <h3>🔹 A3HBxxxx (Antminer S19j Pro и др.)</h3>
-    <ul>
-      <li><strong>Хеш-плата:</strong> A3HBxxxx</li>
-      <li><strong>Количество чипов:</strong> 160</li>
-      <li><strong>Модель БП:</strong> APW12</li>
-    </ul>
-  </div>
+  <style>
+    .table-container {
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+    th {
+      background: #222;
+      font-weight: bold;
+    }
+    tr:nth-child(even) {
+      background: #1e1e2a;
+    }
+  </style>
 
-  <div style="background: #1a1a25; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem;">
-    <h3>🔹 BHBxxxx (Antminer S19 XP и др.)</h3>
-    <ul>
-      <li><strong>Хеш-плата:</strong> BHBxxxx</li>
-      <li><strong>Количество чипов:</strong> 176</li>
-      <li><strong>Модель БП:</strong> APW12</li>
-    </ul>
-  </div>
-
-  <div style="background: #1a1a25; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem;">
-    <h3>🔹 A3HExxxx (Antminer S19j Pro+ и др.)</h3>
-    <ul>
-      <li><strong>Хеш-плата:</strong> A3HExxxx</li>
-      <li><strong>Количество чипов:</strong> 160</li>
-      <li><strong>Модель БП:</strong> APW12</li>
-    </ul>
-  </div>
-
-  <div style="background: #1a1a25; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem;">
-    <h3>🔹 BHExxxx (Antminer S19 XP+ и др.)</h3>
-    <ul>
-      <li><strong>Хеш-плата:</strong> BHExxxx</li>
-      <li><strong>Количество чипов:</strong> 176</li>
-      <li><strong>Модель БП:</strong> APW12</li>
-    </ul>
-  </div>
-
-  <div style="background: #1a1a25; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem;">
-    <h3>🔹 A3HCxxxx (Antminer S19 Pro и др.)</h3>
-    <ul>
-      <li><strong>Хеш-плата:</strong> A3HCxxxx</li>
-      <li><strong>Количество чипов:</strong> 144</li>
-      <li><strong>Модель БП:</strong> APW12</li>
-    </ul>
-  </div>
-
-  <div style="background: #1a1a25; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem;">
-    <h3>🔹 BHCxxxx (Antminer S19 Pro+ и др.)</h3>
-    <ul>
-      <li><strong>Хеш-плата:</strong> BHCxxxx</li>
-      <li><strong>Количество чипов:</strong> 144</li>
-      <li><strong>Модель БП:</strong> APW12</li>
-    </ul>
-  </div>
-
-  <div style="background: #1a1a25; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem;">
-    <h3>🔹 A3HAxxxx (Antminer S19 и др.)</h3>
-    <ul>
-      <li><strong>Хеш-плата:</strong> A3HAxxxx</li>
-      <li><strong>Количество чипов:</strong> 128</li>
-      <li><strong>Модель БП:</strong> APW12</li>
-    </ul>
-  </div>
-
-  <div style="background: #1a1a25; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem;">
-    <h3>🔹 BHAxxxx (Antminer S19+ и др.)</h3>
-    <ul>
-      <li><strong>Хеш-плата:</strong> BHAxxxx</li>
-      <li><strong>Количество чипов:</strong> 128</li>
-      <li><strong>Модель БП:</strong> APW12</li>
-    </ul>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Модель устройства</th>
+          <th>Хеш-плата</th>
+          <th>Количество чипов</th>
+          <th>Модель БП</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>A3HBxxxx (Antminer S19j Pro и др.)</td>
+          <td>A3HBxxxx</td>
+          <td>160</td>
+          <td>APW12</td>
+        </tr>
+        <tr>
+          <td>BHBxxxx (Antminer S19 XP и др.)</td>
+          <td>BHBxxxx</td>
+          <td>176</td>
+          <td>APW12</td>
+        </tr>
+        <tr>
+          <td>A3HExxxx (Antminer S19j Pro+ и др.)</td>
+          <td>A3HExxxx</td>
+          <td>160</td>
+          <td>APW12</td>
+        </tr>
+        <tr>
+          <td>BHExxxx (Antminer S19 XP+ и др.)</td>
+          <td>BHExxxx</td>
+          <td>176</td>
+          <td>APW12</td>
+        </tr>
+        <tr>
+          <td>A3HCxxxx (Antminer S19 Pro и др.)</td>
+          <td>A3HCxxxx</td>
+          <td>144</td>
+          <td>APW12</td>
+        </tr>
+        <tr>
+          <td>BHCxxxx (Antminer S19 Pro+ и др.)</td>
+          <td>BHCxxxx</td>
+          <td>144</td>
+          <td>APW12</td>
+        </tr>
+        <tr>
+          <td>A3HAxxxx (Antminer S19 и др.)</td>
+          <td>A3HAxxxx</td>
+          <td>128</td>
+          <td>APW12</td>
+        </tr>
+        <tr>
+          <td>BHAxxxx (Antminer S19+ и др.)</td>
+          <td>BHAxxxx</td>
+          <td>128</td>
+          <td>APW12</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <p>⚠️ Всегда сверяйте модель на шильдике устройства с данными в интерфейсе! Часто бывает, что модели устройств, серийные номера не соответствуют при покупке Б/У ASIC.</p>
