@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GMiner ASIC — Прошивка для Antminer</title>
+  <meta name="description" content="Официальное руководство по прошивке GMiner ASIC для Bitmain Antminer. Установка, настройка, тюнинг, охлаждение и поддержка." />
+  <style>
+    :root {
+      --bg: #0f0f15;
+      --card-bg: #1a1a25;
+      --text: #e0e0ff;
+      --accent: #00f0b5;
+      --link: #4deeea;
+      --border: #2a2a3a;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.6;
+    }
+    header {
+      text-align: center;
+      padding: 3rem 1rem;
+      background: linear-gradient(135deg, #0a0a12, #121220);
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(to right, var(--accent), var(--link));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.8;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .btn {
+      display: inline-block;
+      margin: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      background: var(--card-bg);
+      color: var(--link);
+      text-decoration: none;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      background: #222;
+      transform: translateY(-2px);
+    }
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    section {
+      margin-bottom: 2.5rem;
+      padding: 1.5rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+    h2 {
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+    ul, ol {
+      padding-left: 1.5rem;
+      margin: 1rem 0;
+    }
+    a {
+      color: var(--link);
+    }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      opacity: 0.7;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 600px) {
+      .btn {
+        display: block;
+        margin: 0.6rem auto;
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>GMiner ASIC</h1>
+  <p class="subtitle">Прошивка нового поколения для Bitmain Antminer — максимум хешрейта, минимум энергопотребления</p>
+  <a href="https://github.com/develsoftware/GMinerAsicRelease/releases" class="btn">📥 Скачать прошивку</a>
+  <a href="manual_ru.pdf" class="btn">📘 Руководство (PDF)</a>
+  <a href="https://t.me/gminer_asic" class="btn">💬 Поддержка в Telegram</a>
+  <a href="https://github.com/develsoftware/GMinerAsicRelease" class="btn">📂 GitHub</a>
+</header>
+
+<div class="container">
+
+  <section>
+    <h2>🚀 Быстрый старт</h2>
+    <ol>
+      <li>Убедитесь, что на ASIC установлена <strong>стоковая прошивка Bitmain</strong> (если использовали VNISH, Luxor и др. — сначала сделайте откат)</li>
+      <li>Скачайте <a href="https://github.com/develsoftware/GMinerAsicRelease/releases">GMiner Toolkit</a></li>
+      <li>Добавьте ваш ASIC в Toolkit, введите IP и пароль (<code>admin</code> по умолчанию)</li>
+      <li>Нажмите «Установить прошивку»</li>
+      <li>После перезагрузки настройте пул и профиль через веб-интерфейс</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>📚 Руководство пользователя</h2>
+    <p>Полное руководство доступно в формате PDF:</p>
+    <a href="manual_ru.pdf" class="btn">Скачать PDF-руководство</a>
+    <p>Основные разделы:</p>
+    <ul>
+      <li>Прошивка оборудования (GMiner Toolkit)</li>
+      <li>Обновление и откат прошивки</li>
+      <li>Настройка пулов (до 3 адресов)</li>
+      <li>Режимы охлаждения: автоматический, ручной, иммерсионный</li>
+      <li>Тюнинг: авто и ручной режимы, настройка чипов</li>
+      <li>Система: сон, задержка запуска, резервная копия</li>
+      <li>Анализ логов и диагностика ошибок</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>✅ Поддерживаемые устройства</h2>
+    <p>На текущий момент поддерживаются модели с хеш-платами:</p>
+    <ul>
+      <li>A3HBxxxx (Antminer S19j Pro и др.)</li>
+      <li>BHBxxxx (Antminer S19 XP и др.)</li>
+      <li>и другие — см. полный список в <a href="manual_ru.pdf">руководстве</a></li>
+    </ul>
+    <p>⚠️ Всегда сверяйте модель на шильдике устройства с данными в интерфейсе!</p>
+  </section>
+
+  <section>
+    <h2>🛠️ Полезные ссылки</h2>
+    <ul>
+      <li><a href="https://github.com/develsoftware/GMinerAsicRelease/releases">Официальные релизы</a></li>
+      <li><a href="https://t.me/gminer_asic">Телеграм-канал поддержки</a></li>
+      <li><a href="manual_ru.pdf">Руководство пользователя (PDF)</a></li>
+      <li><a href="https://github.com/develsoftware/GMinerAsicRelease">Исходный код на GitHub</a></li>
+    </ul>
+  </section>
+
+</div>
+
+<footer>
+  © 2025 GMiner ASIC. Все права защищены. <br>
+  Не является официальным продуктом Bitmain.
+</footer>
+
+</body>
+</html>
