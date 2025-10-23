@@ -87,12 +87,12 @@
       box-shadow: 0 4px 10px rgba(0, 160, 133, 0.25);
     }
     .container {
-      max-width: 100%;
-      margin: 0;
-      padding: 0;
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
     }
     section {
-      margin: 2rem 0;
+      margin-bottom: 2.2rem;
       padding: 1.4rem;
       background: var(--card-bg);
       border-radius: 12px;
@@ -113,37 +113,6 @@
     }
     a:hover {
       text-decoration: underline;
-    }
-    /* Две колонки */
-    .two-column {
-      display: flex;
-      gap: 1rem;
-      margin: 1rem 0;
-    }
-    .two-column > div {
-      flex: 1;
-      min-width: 300px;
-    }
-    @media (max-width: 768px) {
-      .two-column {
-        flex-direction: column;
-      }
-    }
-    /* Видео */
-    .video-wrapper {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-      margin: 1rem 0;
-    }
-    .video-wrapper iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
     }
     /* Таблица */
     .table-container {
@@ -231,6 +200,21 @@
       cursor: pointer;
       font-size: 0.95rem;
     }
+    /* Две колонки */
+    .two-column {
+      display: flex;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .two-column > div {
+      flex: 1;
+      min-width: 300px;
+    }
+    @media (max-width: 768px) {
+      .two-column {
+        flex-direction: column;
+      }
+    }
     /* Адаптив */
     @media (max-width: 768px) {
       h1 { font-size: 1.9rem; }
@@ -254,81 +238,72 @@
     </div>
   </header>
   <div class="container">
-    <!-- Видеообзор и Поддерживаемые устройства в двух колонках -->
+    <!-- Поддерживаемые устройства -->
+    <section>
+      <h2>✅ Поддерживаемые устройства</h2>
+      <p>Полный список из официального руководства. Всегда сверяйте модель на шильдике!</p>
+      <input id="table-filter" placeholder="Фильтр по модели (напр., S19, XP, T21...)">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th onclick="sortTable(0)">Модель ↑↓</th>
+              <th onclick="sortTable(1)">Хеш-плата ↑↓</th>
+              <th onclick="sortTable(2)">Чипы (кол-во/тип) ↑↓</th>
+              <th onclick="sortTable(3)">БП ↑↓</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>S19</td><td>BHB201/203/211/221/231/241</td><td>84/126 BM1362</td><td>APW12</td></tr>
+            <tr><td>S19 Pro</td><td>BHB261/2651/281/283/284</td><td>126 BM1362</td><td>APW12</td></tr>
+            <tr><td>S19j</td><td>BHB2701/265</td><td>108 BM1362</td><td>APW12</td></tr>
+            <tr><td>S19j Pro</td><td>BHB261/263/2621/272/263</td><td>126 BM1362</td><td>APW12</td></tr>
+            <tr><td>S19j Pro+</td><td>BHB2611/262</td><td>120 BM1362</td><td>APW12</td></tr>
+            <tr><td>S19 XP</td><td>BHB601/671/681/602/608</td><td>70/99/110 BM1366</td><td>APW12</td></tr>
+            <tr><td>S19 XP+</td><td>BHB604/607/684</td><td>110 BM1366</td><td>APW12</td></tr>
+            <tr><td>S19k Pro</td><td>BHB691/692/693</td><td>77 BM1366</td><td>APW12</td></tr>
+            <tr><td>S21</td><td>BHB681/683/686</td><td>108 BM1366</td><td>APW12</td></tr>
+            <tr><td>T21</td><td>BHB701/703/705</td><td>108 BM1368</td><td>APW12</td></tr>
+            <tr><td>S21 Pro</td><td>AHB701/BHB703</td><td>91 BM1370</td><td>APW12</td></tr>
+            <tr><td>S21+</td><td>AHB701</td><td>65 BM1370</td><td>APW12</td></tr>
+            <tr><td>S21+ (низк.)</td><td>AHB701</td><td>55 BM1370</td><td>APW12</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>⚠️ На Б/У ASIC модели часто не совпадают — проверяйте шильдик! 📖 <a href="manual_ru.pdf">PDF</a></p>
+    </section>
+
+    <!-- Руководство и Частые вопросы в двух колонках -->
     <section class="two-column">
-      <!-- Левая колонка: Видеообзор -->
+      <!-- Левая колонка: Руководство пользователя -->
       <div>
-        <h2>🎬 Видеообзор прошивки</h2>
-        <p>Полный обзор установки, настройки и работы прошивки GMiner ASIC.</p>
-        <div class="video-wrapper">
-          <iframe src="https://rutube.ru/play/embed/c39ba05f477fac1ca6ccf9fd4372447c" frameborder="0" allowfullscreen></iframe>
-        </div>
+        <h2>📚 Руководство пользователя</h2>
+        <ul>
+          <li><a href="manual_ru.pdf#page=3">1. Прошивка оборудования (Gminer Toolkit)</a></li>
+          <li><a href="manual_ru.pdf#page=7">2. Список поддерживаемых устройств</a></li>
+          <li><a href="manual_ru.pdf#page=8">3. Обновление прошивки</a></li>
+          <li><a href="manual_ru.pdf#page=10">4. Откат VNISH на BITMAIN</a></li>
+          <li><a href="manual_ru.pdf#page=11">5. Экран мониторинга (Обзор)</a></li>
+          <li><a href="manual_ru.pdf#page=15">6. Пулы</a></li>
+          <li><a href="manual_ru.pdf#page=17">7. Охлаждение</a></li>
+          <li><a href="manual_ru.pdf#page=19">8. Производительность (Тюнинг)</a></li>
+          <li><a href="manual_ru.pdf#page=24">9. Система</a></li>
+          <li><a href="manual_ru.pdf#page=26">10. Сеть</a></li>
+          <li><a href="manual_ru.pdf#page=28">11. Оформление</a></li>
+          <li><a href="manual_ru.pdf#page=29">12. Лог</a></li>
+        </ul>
       </div>
-      <!-- Правая колонка: Поддерживаемые устройства -->
+      <!-- Правая колонка: Частые вопросы -->
       <div>
-        <h2>✅ Поддерживаемые устройства</h2>
-        <p>Полный список из официального руководства. Всегда сверяйте модель на шильдике!</p>
-        <input id="table-filter" placeholder="Фильтр по модели (напр., S19, XP, T21...)">
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th onclick="sortTable(0)">Модель ↑↓</th>
-                <th onclick="sortTable(1)">Хеш-плата ↑↓</th>
-                <th onclick="sortTable(2)">Чипы (кол-во/тип) ↑↓</th>
-                <th onclick="sortTable(3)">БП ↑↓</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>S19</td><td>BHB201/203/211/221/231/241</td><td>84/126 BM1362</td><td>APW12</td></tr>
-              <tr><td>S19 Pro</td><td>BHB261/2651/281/283/284</td><td>126 BM1362</td><td>APW12</td></tr>
-              <tr><td>S19j</td><td>BHB2701/265</td><td>108 BM1362</td><td>APW12</td></tr>
-              <tr><td>S19j Pro</td><td>BHB261/263/2621/272/263</td><td>126 BM1362</td><td>APW12</td></tr>
-              <tr><td>S19j Pro+</td><td>BHB2611/262</td><td>120 BM1362</td><td>APW12</td></tr>
-              <tr><td>S19 XP</td><td>BHB601/671/681/602/608</td><td>70/99/110 BM1366</td><td>APW12</td></tr>
-              <tr><td>S19 XP+</td><td>BHB604/607/684</td><td>110 BM1366</td><td>APW12</td></tr>
-              <tr><td>S19k Pro</td><td>BHB691/692/693</td><td>77 BM1366</td><td>APW12</td></tr>
-              <tr><td>S21</td><td>BHB681/683/686</td><td>108 BM1366</td><td>APW12</td></tr>
-              <tr><td>T21</td><td>BHB701/703/705</td><td>108 BM1368</td><td>APW12</td></tr>
-              <tr><td>S21 Pro</td><td>AHB701/BHB703</td><td>91 BM1370</td><td>APW12</td></tr>
-              <tr><td>S21+</td><td>AHB701</td><td>65 BM1370</td><td>APW12</td></tr>
-              <tr><td>S21+ (низк.)</td><td>AHB701</td><td>55 BM1370</td><td>APW12</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p>⚠️ На Б/У ASIC модели часто не совпадают — проверяйте шильдик! 📖 <a href="manual_ru.pdf">PDF</a></p>
+        <h2>❓ Частые вопросы</h2>
+        <ul>
+          <li><a href="manual_ru.pdf#page=10">Как откатить с VNISH?</a></li>
+          <li><a href="manual_ru.pdf#page=3">Почему Toolkit не видит устройство?</a></li>
+          <li><a href="manual_ru.pdf#page=17">Как настроить охлаждение?</a></li>
+          <li><a href="manual_ru.pdf#page=19">Что делать с медленными чипами?</a></li>
+        </ul>
+        <p>Поддержка: <a href="https://t.me/gminer_asic">Telegram-канал</a>. ⚠️ Не отправляйте логины/пароли пулов!</p>
       </div>
-    </section>
-
-    <!-- Руководство пользователя -->
-    <section>
-      <h2>📚 Руководство пользователя</h2>
-      <ul>
-        <li><a href="manual_ru.pdf#page=3">1. Прошивка оборудования (Gminer Toolkit)</a></li>
-        <li><a href="manual_ru.pdf#page=7">2. Список поддерживаемых устройств</a></li>
-        <li><a href="manual_ru.pdf#page=8">3. Обновление прошивки</a></li>
-        <li><a href="manual_ru.pdf#page=10">4. Откат VNISH на BITMAIN</a></li>
-        <li><a href="manual_ru.pdf#page=11">5. Экран мониторинга (Обзор)</a></li>
-        <li><a href="manual_ru.pdf#page=15">6. Пулы</a></li>
-        <li><a href="manual_ru.pdf#page=17">7. Охлаждение</a></li>
-        <li><a href="manual_ru.pdf#page=19">8. Производительность (Тюнинг)</a></li>
-        <li><a href="manual_ru.pdf#page=24">9. Система</a></li>
-        <li><a href="manual_ru.pdf#page=26">10. Сеть</a></li>
-        <li><a href="manual_ru.pdf#page=28">11. Оформление</a></li>
-        <li><a href="manual_ru.pdf#page=29">12. Лог</a></li>
-      </ul>
-    </section>
-
-    <!-- Частые вопросы -->
-    <section>
-      <h2>❓ Частые вопросы</h2>
-      <ul>
-        <li><a href="manual_ru.pdf#page=10">Как откатить с VNISH?</a></li>
-        <li><a href="manual_ru.pdf#page=3">Почему Toolkit не видит устройство?</a></li>
-        <li><a href="manual_ru.pdf#page=17">Как настроить охлаждение?</a></li>
-        <li><a href="manual_ru.pdf#page=19">Что делать с медленными чипами?</a></li>
-      </ul>
-      <p>Поддержка: <a href="https://t.me/gminer_asic">Telegram-канал</a>. ⚠️ Не отправляйте логины/пароли пулов!</p>
     </section>
   </div>
   <script>
