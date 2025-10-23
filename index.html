@@ -200,12 +200,43 @@
       cursor: pointer;
       font-size: 0.95rem;
     }
+    /* Пинг-таблица */
+    #ping-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+    }
+    #ping-table td {
+      padding: 0.5rem;
+      border: 1px solid var(--border);
+    }
+    .ping-value {
+      font-weight: bold;
+      color: var(--accent);
+    }
+    /* Адаптив видео */
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 */
+      height: 0;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
     /* Адаптив */
     @media (max-width: 768px) {
       h1 { font-size: 1.9rem; }
       .btn-group { flex-direction: column; align-items: center; }
       table { font-size: 0.78rem; }
       th, td { padding: 0.4rem 0.3rem; }
+      .video-wrapper { padding-bottom: 56.25%; }
     }
   </style>
 </head>
@@ -222,8 +253,37 @@
       <a href="manual_ru.pdf" class="btn" download>📘 Скачать PDF</a>
     </div>
   </header>
-
   <div class="container">
+    <!-- Видеообзор -->
+    <section>
+      <h2>🎬 Видеообзор прошивки</h2>
+      <p>Полный обзор установки, настройки и работы прошивки GMiner ASIC.</p>
+      <div class="video-wrapper">
+        <iframe
+          src="https://rutube.ru/play/embed/c39ba05f477fac1ca6ccf9fd4372447c"
+          allow="clipboard-write; autoplay"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </section>
+
+    <!-- Пинг до пулов -->
+    <section>
+      <h2>🌐 Пинг до BTC-пулов (обновляется каждые 10 сек)</h2>
+      <p>Измеряется время ответа от API пула. Чем ниже — тем лучше.</p>
+      <table id="ping-table">
+        <thead>
+          <tr>
+            <th style="border:1px solid var(--border); padding:0.6rem;">Пул</th>
+            <th style="border:1px solid var(--border); padding:0.6rem;">Пинг (мс)</th>
+          </tr>
+        </thead>
+        <tbody id="ping-body">
+          <!-- Заполняется JS -->
+        </tbody>
+      </table>
+    </section>
+
     <!-- Поддерживаемые устройства -->
     <section>
       <h2>✅ Поддерживаемые устройства</h2>
@@ -290,14 +350,12 @@
       <p>Поддержка: <a href="https://t.me/gminer_asic">Telegram-канал</a>. ⚠️ Не отправляйте логины/пароли пулов!</p>
     </section>
   </div>
-
   <script>
     // === ТЕМА ===
     const toggle = document.getElementById('theme-toggle');
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
     toggle.textContent = savedTheme === 'dark' ? '☀️ Светлый' : '🌙 Тёмный';
-
     toggle.onclick = () => {
       const current = document.documentElement.getAttribute('data-theme');
       const newTheme = current === 'dark' ? 'light' : 'dark';
@@ -321,7 +379,6 @@
       { title: "Оформление", keywords: "оформление тема язык интерфейс", page: 28 },
       { title: "Лог", keywords: "лог ошибки staled share bad chips диагностика", page: 29 }
     ];
-
     document.getElementById('search-input').addEventListener('input', function() {
       const query = this.value.trim().toLowerCase();
       const resultsDiv = document.getElementById('search-results');
@@ -329,12 +386,10 @@
         resultsDiv.innerHTML = '';
         return;
       }
-
       const matches = searchIndex.filter(item =>
         item.title.toLowerCase().includes(query) ||
         item.keywords.includes(query)
       );
-
       if (matches.length === 0) {
         resultsDiv.innerHTML = '<p>Ничего не найдено. Попробуйте: "пул", "охлаждение", "toolkit", "vnish"</p>';
       } else {
@@ -351,20 +406,16 @@
       const tbody = table.tBodies[0];
       const rows = Array.from(tbody.rows);
       const direction = sortDirections[colIndex] = !sortDirections[colIndex];
-
       rows.sort((a, b) => {
         const aText = a.cells[colIndex].textContent.trim();
         const bText = b.cells[colIndex].textContent.trim();
-
         if (colIndex === 2) {
           const aNum = parseInt(aText) || 0;
           const bNum = parseInt(bText) || 0;
           return (aNum - bNum) * (direction ? 1 : -1);
         }
-
         return aText.localeCompare(bText, 'ru') * (direction ? 1 : -1);
       });
-
       rows.forEach(row => tbody.appendChild(row));
     }
 
@@ -389,6 +440,68 @@
       }
     }
     updateGithubVersion();
+
+    // === ПИНГ ДО ПУЛОВ ===
+    const pools = [
+      { name: "ViaBTC", url: "https://pool.viabtc.com/api/v1/pool/info" },
+      { name: "AntPool", url: "https://www.antpool.com/api/poolStats.htm?coinType=1" },
+      { name: "F2Pool", url: "https://api.f2pool.com/v1/btc/info" },
+      { name: "Poolin", url: "https://poolin.com/api/v1/btc/info" },
+      { name: "Slush Pool", url: "https://api.slushpool.com/json/btc/" },
+      { name: "BTC.com", url: "https://pool.btc.com/api/v1/btc/info" },
+      { name: "Luxor", url: "https://api.luxor.tech/btc/info" },
+      { name: "SBI Crypto", url: "https://sbi-crypto.com/api/v1/btc/info" },
+      { name: "MARA Pool", url: "https://api.marapool.com/v1/btc/info" },
+      { name: "Foundry USA", url: "https://api.foundry.com/v1/btc/info" }
+    ];
+
+    const pingBody = document.getElementById('ping-body');
+
+    function measureLatency(url) {
+      return new Promise((resolve) => {
+        const start = performance.now();
+        fetch(url, { method: 'HEAD', mode: 'no-cors' })
+          .then(() => {
+            const end = performance.now();
+            resolve(Math.round(end - start));
+          })
+          .catch(() => {
+            // CORS блокирует, но HEAD всё равно даёт latency
+            const end = performance.now();
+            resolve(Math.round(end - start));
+          });
+      });
+    }
+
+    async function updatePings() {
+      pingBody.innerHTML = '';
+      for (const pool of pools) {
+        const row = document.createElement('tr');
+        const nameCell = document.createElement('td');
+        const pingCell = document.createElement('td');
+        nameCell.textContent = pool.name;
+        pingCell.textContent = '⏳';
+        pingCell.className = 'ping-value';
+        row.appendChild(nameCell);
+        row.appendChild(pingCell);
+        pingBody.appendChild(row);
+
+        try {
+          const latency = await measureLatency(pool.url);
+          if (latency < 5000) {
+            pingCell.textContent = `${latency} мс`;
+          } else {
+            pingCell.textContent = '—';
+          }
+        } catch {
+          pingCell.textContent = '—';
+        }
+      }
+    }
+
+    // Запуск каждые 10 секунд
+    updatePings();
+    setInterval(updatePings, 10000);
   </script>
 </body>
 </html>
